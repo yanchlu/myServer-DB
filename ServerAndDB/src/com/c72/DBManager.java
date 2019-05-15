@@ -156,4 +156,15 @@ public class DBManager {
 		    }
 		}
 	}
+	public void disConnect() {
+		try {
+			if(!conn.isClosed()) {
+				conn.close();
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		conn=null;
+	}
 }
