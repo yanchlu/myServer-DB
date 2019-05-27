@@ -13,14 +13,18 @@
    <bean id="dataSource" 
       class="org.springframework.jdbc.datasource.DriverManagerDataSource">
       <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
-      <property name="url" value="jdbc:mysql://localhost:3306/learn_mysql?serverTimezone=GMT"/>
+      <property name="url" value="jdbc:mysql://localhost:3306/test?serverTimezone=GMT%2B8"/>
       <property name="username" value="root"/>
       <property name="password" value="Caijunqi111"/>
    </bean>
    
    <!-- Definition for studentJDBCTemplate bean -->
+   <!-- 
    <bean id="studentJDBCTemplate" 
       class="com.c72.StudentJDBCTemplate">
    </bean>
-
+	-->
+	<bean id="TaskDAOImpl"
+		class="com.c72.TaskDAOImpl">
+		</bean>
 </beans>
