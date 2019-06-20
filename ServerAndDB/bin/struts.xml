@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+	"http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<!-- START SNIPPET: xworkSample -->
+<struts>
+<constant name="struts.devMode" value="true" />
+   <constant name="struts.multipart.maxSize" value="1000000" /> <!-- 以Byte为单位 -->
+
+   <package name="helloworld" extends="struts-default">
+     
+     <action name="HelloStruts2_upload" 
+            class="com.c72.HelloStruts2" 
+            method="upload">
+            <!-- defaultStack中已经包含fileUpload -->
+       		<interceptor-ref name="defaultStack"/>
+       		<interceptor-ref name="fileUpload">
+       			<param name="allowedTypes">image/jpeg,image/gif,text/plain</param>	<!-- 限定能上传的文件类型,用","隔开 -->
+       		</interceptor-ref>
+            <result name="success">/WEB-INF/jsp/success.jsp</result>
+            <result name="error">/WEB-INF/jsp/error.jsp</result>
+      </action>
+      
+      <action name="HelloStruts2_*" 
+            class="com.c72.HelloStruts2" 
+            method="{1}">
+            <result name="success">/WEB-INF/jsp/hello.jsp</result>
+      </action>
+   </package>
+</struts>

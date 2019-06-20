@@ -6,13 +6,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+
 @Controller
 public class TaskController{ 
 
@@ -274,16 +281,21 @@ public class TaskController{
 			   modelMap.put("state", "fail");
 			   modelMap.put("log", "User mismatch publisher.");
 		   }else {
-			   List<UserJoins> userJoins=taskDAOImpl.listUserJoinsbyTid(task.getTid());
-			   for(int i=0;i<userJoins.size();i++) {
-				   UserJoins join=userJoins.get(i);
-				   User user=taskDAOImpl.getUserbyUid(join.getUid());
-				   taskDAOImpl.updateUser(join.getUid(), user.getName(), user.getPhone(), user.getEmail(), user.getPassword(), user.getMoney()+task.getMoney(), user.getCredit()+1);
+			   if(task.getState().equals("finished")) {
+				   modelMap.put("state", "fail");
+				   modelMap.put("log", "Task already finished.");
+			   }else {
+				   List<UserJoins> userJoins=taskDAOImpl.listUserJoinsbyTid(task.getTid());
+				   for(int i=0;i<userJoins.size();i++) {
+					   UserJoins join=userJoins.get(i);
+					   User user=taskDAOImpl.getUserbyUid(join.getUid());
+					   taskDAOImpl.updateUser(join.getUid(), user.getName(), user.getPhone(), user.getEmail(), user.getPassword(), user.getMoney()+task.getMoney(), user.getCredit()+1);
+				   }
+				   User publisher=taskDAOImpl.getUserbyUid(task.getUid());
+				   taskDAOImpl.updateUser(publisher.getUid(), publisher.getName(), publisher.getPhone(), publisher.getEmail(), publisher.getPassword(), publisher.getMoney() + (task.getTotal_num() - task.getCurrent_num()) * task.getMoney(), publisher.getCredit());
+				   taskDAOImpl.updateTask(task.getTid(), task.getTitle(), task.getDetail(), task.getMoney(), task.getType(), task.getTotal_num(), task.getCurrent_num(), task.getStart_time(), task.getEnd_time(), "finished");
+				   modelMap.put("state", "success");
 			   }
-			   User publisher=taskDAOImpl.getUserbyUid(task.getUid());
-			   taskDAOImpl.updateUser(publisher.getUid(), publisher.getName(), publisher.getPhone(), publisher.getEmail(), publisher.getPassword(), publisher.getMoney() + (task.getTotal_num() - task.getCurrent_num()) * task.getMoney(), publisher.getCredit());
-			   taskDAOImpl.updateTask(task.getTid(), task.getTitle(), task.getDetail(), task.getMoney(), task.getType(), task.getTotal_num(), task.getCurrent_num(), task.getStart_time(), task.getEnd_time(), "finished");
-			   modelMap.put("state", "success");
 		   }
 	   }
 	   return modelMap;
@@ -370,5 +382,42 @@ public class TaskController{
 	   Message message=taskDAOImpl.getMessage(Integer.valueOf(tid),Integer.valueOf(rank));
 	   modelMap.put("message", message);
 	   return modelMap;
+   }
+   
+   @RequestMapping(value = "/hello.test", method = RequestMethod.GET)
+   public String testLink(HttpServletRequest request, HttpServletResponse response, Model model, String v_uid, String v_password) { 
+	   /*ModelAndView mv=new ModelAndView();
+	   mv.setViewName("hello");
+	   System.out.println("visit");
+	   return mv;*/
+	   /*try {
+		   System.out.println("visit");
+		request.getRequestDispatcher("newhello.test").forward(request, response);
+	} catch (ServletException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}*/
+	   //return "forward:newhello.test";
+	   /*try {
+		response.sendRedirect("newhello.test");
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}*/
+	   if(Integer.valueOf(v_uid)==-1) {
+		   return "error";
+	   }
+	   return "redirect:newhello.test"; 
+   }
+   	
+   @RequestMapping(value = "/newhello.test", method = RequestMethod.GET)
+   public ModelAndView testLinkRedirect(HttpServletRequest request, HttpServletResponse response, Model model) { 
+	   ModelAndView mv=new ModelAndView();
+	   mv.setViewName("newhello");
+	   System.out.println("visit1");
+	   return mv;
    }
 }

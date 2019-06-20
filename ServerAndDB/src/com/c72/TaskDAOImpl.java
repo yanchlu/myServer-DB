@@ -9,16 +9,32 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
+import org.hibernate.query.Query;
+import org.hibernate.Session; 
+import org.hibernate.Transaction;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.criterion.Restrictions;
+import javax.persistence.criteria.CriteriaQuery;
 
 public class TaskDAOImpl implements TaskDAO {
 	   private DataSource dataSource;
 	   private JdbcTemplate jdbcTemplateObject; 
+	   private static SessionFactory factory; 
 	@Override
 	@Autowired
 	public void setDataSource(DataSource ds) {
 		// TODO Auto-generated method stub
 		dataSource=ds;
 		this.jdbcTemplateObject = new JdbcTemplate(dataSource);
+		try{
+			factory = new Configuration().configure().buildSessionFactory();
+	    }catch (Throwable ex) { 
+	    	System.err.println("Failed to create sessionFactory object." + ex);
+	        throw new ExceptionInInitializerError(ex); 
+	    }
 	}
 
 	@Override
@@ -31,32 +47,61 @@ public class TaskDAOImpl implements TaskDAO {
 	@Override
 	public User getUserbyUid(Integer uid) {
 		// TODO Auto-generated method stub
-		String SQL = "select * from User where uid = ?";
-		User user;
-		try {
+		//String SQL = "select * from User where uid = ?";
+		User user=null;
+		Session session = factory.openSession();
+	      Transaction tx = null;
+	      try{
+	         tx = session.beginTransaction();
+	         user = session.get(User.class, uid); 
+	         tx.commit();
+	      }catch (HibernateException e) {
+	         if (tx!=null) tx.rollback();
+	         e.printStackTrace(); 
+	      }finally {
+	         session.close(); 
+	      }
+		/*try {
 		    user = jdbcTemplateObject.queryForObject(SQL, 
 		                        new Object[]{uid}, new UserMapper());
 		} catch (EmptyResultDataAccessException e) {
 			e.printStackTrace();
 			user=null;
 			// TODO: handle exception
-		}
+		}*/
 	      return user;
 	}
 	
 	@Override
 	public User getUserbyName(String name) {
 		// TODO Auto-generated method stub
-		String SQL = "select * from User where name = ?";
-		User user;
-		try {
+		//String SQL = "select * from User where name = ?";
+		User user=null;
+		Session session = factory.openSession();
+	      Transaction tx = null;
+	      try{
+	         tx = session.beginTransaction();
+	         //charVar类型/String类型要用单引号括起，否则会出错
+	         Query<User> q=session.createQuery("from User user where user.name='"+name+"'");
+	         List<User> users=q.list();
+	         if(users.size()>0) {
+	        	 user=users.get(0);
+	         }
+	         tx.commit();
+	      }catch (HibernateException e) {
+	         if (tx!=null) tx.rollback();
+	         e.printStackTrace(); 
+	      }finally {
+	         session.close(); 
+	      }
+		/*try {
 		    user = jdbcTemplateObject.queryForObject(SQL, 
 		                        new Object[]{name}, new UserMapper());
 		}catch (EmptyResultDataAccessException e) {
 			e.printStackTrace();
 			user=null;
 			// TODO: handle exception
-		}
+		}*/
 	      return user;
 	}
 
@@ -137,7 +182,7 @@ public class TaskDAOImpl implements TaskDAO {
 	@Override
 	public List<Task> listTasks(String extra) {
 		// TODO Auto-generated method stub
-		String SQL="select * from Task";
+		String SQL="select * from Task ";
 		if(extra.equals("true")) {
 			SQL+="where state = 'extra' ";
 		}

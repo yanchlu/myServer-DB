@@ -22,7 +22,20 @@
   version="4.0" 
   metadata-complete="true">  
   
-	<servlet>
+  <welcome-file-list>
+      <welcome-file>index.jsp</welcome-file>
+   </welcome-file-list>
+  
+   <filter>
+   	<filter-name>struts2</filter-name>
+   	<filter-class>org.apache.struts2.dispatcher.filter.StrutsPrepareAndExecuteFilter</filter-class>
+   </filter>
+   <filter-mapping>
+   	<filter-name>struts2</filter-name>
+   	<url-pattern>/struts-test/*</url-pattern>
+   </filter-mapping>
+   
+   <servlet>
       <servlet-name>ServerAndDB</servlet-name>
       <servlet-class>
          org.springframework.web.servlet.DispatcherServlet
@@ -34,7 +47,18 @@
       <servlet-name>ServerAndDB</servlet-name>
       <url-pattern>/</url-pattern>
    </servlet-mapping>
+   
+    <servlet>
+      <servlet-name>learn_test</servlet-name>
+      <servlet-class>
+         org.springframework.web.servlet.DispatcherServlet
+      </servlet-class>
+      <load-on-startup>1</load-on-startup>
+   </servlet>
 
-    
+   <servlet-mapping>
+      <servlet-name>learn_test</servlet-name>
+      <url-pattern>*.test</url-pattern>
+   </servlet-mapping>
     
 </web-app>

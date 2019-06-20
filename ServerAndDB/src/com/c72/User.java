@@ -8,6 +8,7 @@ public class User {
 	private String password;
 	private int money;
 	private int credit;
+	public User() {}
 	public void setUid(int uid) {
 		this.uid = uid;
 	}
