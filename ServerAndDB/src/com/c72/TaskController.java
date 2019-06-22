@@ -420,4 +420,112 @@ public class TaskController{
 	   System.out.println("visit1");
 	   return mv;
    }
+   
+   @RequestMapping(value = "/createSurvey", method = RequestMethod.POST)
+   @ResponseBody
+   public Map<String,Object> createSurvey( @RequestParam("tid") String tid,
+		   ) { 
+		
+	   Map<String, Object> modelMap=new HashMap<String, Object>();
+	   Task task=taskDAOImpl.getTask(Integer.valueOf(tid));
+	   if(task == null){
+		   modelMap.put("status", "fail");
+		   modelMap.put("log","This Task do not exist.");
+	   }
+	   else{
+		   taskDAOImpl.createSurvey(Integer.valueOf(tid));
+		   List<Survey> surveyList=taskDAOImpl.getSurveybyTid(Integer.valueOf(tid));	   
+		   modelMap.put("surveyList", surveyList);
+		   modelMap.put("status", "success");
+	   }
+	   return modelMap;
+   }
+   
+   @RequestMapping(value = "/getSurvey", method = RequestMethod.POST)
+   @ResponseBody
+   public Map<String,Object> getSurvey( @RequestParam("sid") String sid,
+		   ) { 
+	   Map<String, Object> modelMap=new HashMap<String, Object>();
+	   Survey survey=taskDAOImpl.getSurveybySid(Integer.valueOf(sid));
+	   if(survey == null){
+		   modelMap.put("status", "fail");
+		   modelMap.put("log","This Survey do not exist.");
+	   }
+	   else{
+		   List<Question> questionList= taskDAOImpl.getQuestionbySid(Integer.valueOf(sid));
+		   modelMap.put("survey", survey);
+		   modelMap.put("questionList", questionList);
+		   modelMap.put("status", "success");
+	   }
+	   return modelMap;
+   }
+   
+   @RequestMapping(value = "/deleteSurvey", method = RequestMethod.POST)
+   @ResponseBody
+   public Map<String,Object> deleteSurvey( @RequestParam("sid") String sid,
+		   ) { 
+	   Map<String, Object> modelMap=new HashMap<String, Object>();
+	   Survey survey=taskDAOImpl.getSurveybySid(Integer.valueOf(sid));
+	   if(survey == null){
+		   modelMap.put("status", "fail");
+		   modelMap.put("log","This Survey do not exist.");
+	   }
+	   else{
+		   taskDAOImpl.deleteAnswerStatistics(Integer.valueOf(sid));
+		   taskDAOImpl.deleteQuestion(Integer.valueOf(sid));
+		   taskDAOImpl.deleteSurvey(Integer.valueOf(sid));
+		   modelMap.put("status", "success");
+	   }
+	   return modelMap;
+   }
+   
+   @RequestMapping(value = "/getAnswerStatistics", method = RequestMethod.POST)
+   @ResponseBody
+   public Map<String,Object> getAnswerStatistics( @RequestParam("sid") String sid,
+		   ) { 
+	   Map<String, Object> modelMap=new HashMap<String, Object>();
+	   Survey survey=taskDAOImpl.getSurveybySid(Integer.valueOf(sid));
+	   if(survey == null){
+		   modelMap.put("status", "fail");
+		   modelMap.put("log","This Survey do not exist.");
+	   }
+	   else{
+		   List<AnswerStatistics> statistics = taskDAOImpl.getStatisticsbySid(Integer.valueOf(sid));
+		   modelMap.put("statistics", statistics);
+		   modelMap.put("status", "success");
+	   }
+	   return modelMap;
+   }
+   
+   @RequestMapping(value = "/updateAnswerStatistics", method = RequestMethod.POST)
+   @ResponseBody
+   public Map<String,Object> updateAnswerStatistics( @RequestParam("sid") String sid,
+													 @RequestParam("qid") String qid,
+													 @RequestParam("answer") String answer
+		   ) { 
+	   Map<String, Object> modelMap=new HashMap<String, Object>();
+	   Survey survey=taskDAOImpl.getSurveybySid(Integer.valueOf(sid));
+	   if(survey == null){
+		   modelMap.put("status", "fail");
+		   modelMap.put("log","This Survey do not exist.");
+	   }
+	   else{
+		   Question question = taskDAOImpl.getQuestionbyId(Integer.valueOf(sid),Integer.valueOf(qid));
+		   if(question == null){
+			   modelMap.put("status", "fail");
+			   modelMap.put("log","This Question do not exist.");
+		   }
+		   else{
+			   int a,b,c,d;
+			   if(answer == "A") a = 1;
+			   if(answer == "B") b = 1;
+			   if(answer == "C") c = 1;
+			   if(answer == "D") d = 1;
+			   AnswerStatistics statistics = getAnswerStatisticsbyID(Integer.valueOf(sid),Integer.valueOf(qid);
+			   taskDAOImpl.updateAnswerStatistics(Integer.valueOf(sid),Integer.valueOf(qid),statistics.getCountA()+a,statistics.getCountB()+b,statistics.getCountC()+c,statistics.getCountD()+d);
+			   modelMap.put("status", "success");
+		   }  
+	   }
+	   return modelMap;
+   }
 }

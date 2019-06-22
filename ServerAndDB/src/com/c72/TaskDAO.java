@@ -180,7 +180,7 @@ public interface TaskDAO {
 	   /**
 	    * This is method to be used to delete questions
 	    */
-		public void deleteQuestion(int sid,int qid);
+		public void deleteQuestion(int sid);
 		
 		//AnswerStatistics
 		/** 
@@ -206,5 +206,5 @@ public interface TaskDAO {
 		/**
 	    * This is method to be used to delete questions
 	    */
-		public void deleteAnswerStatistics(int sid,int qid);
+		public void deleteAnswerStatistics(int sid);
 }

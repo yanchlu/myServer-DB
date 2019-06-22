@@ -353,7 +353,7 @@ public class TaskDAOImpl implements TaskDAO {
 	    return survey;
 	}
 	@Override
-	public void deleteSurveybySid(int sid) {
+	public void deleteSurvey(int sid) {
 		// TODO Auto-generated method stub
 		String SQL="delete from Survey where sid = ?";
 		jdbcTemplateObject.update(SQL, sid);
@@ -396,17 +396,10 @@ public class TaskDAOImpl implements TaskDAO {
 	    return question;
 	}
 	@Override
-	public void deleteQuestionbyId(int sid,int qid) {
+	public void deleteQuestion(int sid) {
 		// TODO Auto-generated method stub
-		String SQL="delete from Question where sid = ? and qid = ?";
-		jdbcTemplateObject.update(SQL, sid, qid);
-	}
-	
-	@Override
-	public void deleteQuestionbyId(int sid,int qid) {
-		// TODO Auto-generated method stub
-		String SQL="delete from Question where sid = ? and qid = ?";
-		jdbcTemplateObject.update(SQL, sid, qid);
+		String SQL="delete from Question where sid = ?";
+		jdbcTemplateObject.update(SQL, sid);
 	}
 	
 	//AnswerStatistics
@@ -452,9 +445,9 @@ public class TaskDAOImpl implements TaskDAO {
 	    jdbcTemplateObject.update(SQL, count_a, count_b, count_c, count_d, sid, qid);
 	}
 	@Override
-	public void deleteAnswerStatisticsbyId(int sid,int qid) {
+	public void deleteAnswerStatistics(int sid) {
 		// TODO Auto-generated method stub
 		String SQL="delete from AnswerStatistics where sid = ? and qid = ?";
-		jdbcTemplateObject.update(SQL, sid, qid);
+		jdbcTemplateObject.update(SQL, sid);
 	}
 }
