@@ -133,4 +133,78 @@ public interface TaskDAO {
 	    * from the Task table by user id.
 	    */
 	   public List<UserJoins> listUserJoinsbyUid(int uid);
+	   
+
+	   //Survey
+	   //-------
+	   /** 
+	    * This is the method to be used to Create Survey.
+	    * It will response a sid.
+	    */
+	   public void createSurvey(int tid);
+	   /** 
+	    * This is the method to be used to search Survey according to the tid.
+	    * It will response a list of sid.
+	    */
+	   public list<Survey> getSurveybyTid(int tid);
+	   /** 
+	    * This is the method to be used to search Survey according to the sid.
+	    * It will return the Survey.
+		* @return
+	    */
+	   public Survey getSurveybySid(int sid);
+	   /**
+	    * This is method to be used to delete survey and related questions
+	    * from the Survey table and the Question table.
+	    * @return
+	    */
+		public void deleteSurvey(int sid);
+	   
+	   //Question
+	   //-------
+	   /** 
+	    * This is the method to be used to Create Question.
+	    * 
+	    */
+	   public void createQuestion(int sid,int qid,string qtype,string qtitle,string answer_a,string answer_b,string answer_c,string answer_d);
+	   /** 
+	    * This is the method to be used to search a list of Questions according to the sid.
+	    * @return
+	    */
+	   public List<Question> getQuestionbySid(int sid);
+	   /** 
+	    * This is the method to be used to search Question according to the sid and qid.
+	    * @return
+	    */
+	   public Question getQuestionbyId(int sid,int qid);
+	   /**
+	    * This is method to be used to delete questions
+	    */
+		public void deleteQuestion(int sid,int qid);
+		
+		//AnswerStatistics
+		/** 
+	    * This is the method to be used to Create AnswerStatistics.
+	    * 
+	    */
+		public void createAnswerStatistics(int sid,int qid);
+		 /** 
+	    * This is the method to be used to search a list of AnswerStatistics according to the sid.
+	    * @return
+	    */
+		public list<AnswerStatistics> getStatisticsbySid(int sid);
+		/** 
+	    * This is the method to be used to search AnswerStatistics according to the sid and qid.
+	    * @return
+	    */
+		public AnswerStatistics getAnswerStatisticsbyID(int sid,int qid);
+		/**
+	    * This is method to be used to update AnswerStatistics info
+	    * in the AnswerStatistics table.
+	    */
+		public void updateAnswerStatistics(int sid,int qid,int a,int b,int c,int d);
+		/**
+	    * This is method to be used to delete questions
+	    */
+		public void deleteAnswerStatistics(int sid,int qid);
 }

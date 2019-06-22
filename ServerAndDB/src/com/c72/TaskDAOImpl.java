@@ -314,5 +314,147 @@ public class TaskDAOImpl implements TaskDAO {
 		List<UserJoins> userJoins=jdbcTemplateObject.query(SQL,new Object[] {uid},new UserJoinsMapper());
 		return userJoins;
 	}
+	
+	//Survey
+	@Override
+	public void createSurvey(int tid) {
+		// TODO Auto-generated method stub
+		String SQL = "insert into Survey (tid) values (?)";     
+	    jdbcTemplateObject.update( SQL, tid);
+	}
+	
+	@Override
+	public List<Survey> getSurveybyTid(int tid) {
+		// TODO Auto-generated method stub
+		String SQL="select * from Survey where tid = ?";    
+		List<Survey> surveyList;
+		try {
+			surveyList=jdbcTemplateObject.query(SQL,new Object[] {tid},new SurveyMapper());
+		} catch (EmptyResultDataAccessException e) {
+			e.printStackTrace();
+			surveyList=null;
+			// TODO: handle exception
+		}	
+	    return surveyList;
+	}
+	@Override
+	public Survey getSurveybySid(int sid) {
+		// TODO Auto-generated method stub
+		String SQL="select * from Survey where sid = ?";    
+		Survey survey;
+		try {
+			survey=jdbcTemplateObject.queryForObject(SQL,new Object[] {sid},new SurveyMapper());
+		} catch (EmptyResultDataAccessException e) {
+			e.printStackTrace();
+			survey=null;
+			// TODO: handle exception
+		}
+		
+	    return survey;
+	}
+	@Override
+	public void deleteSurveybySid(int sid) {
+		// TODO Auto-generated method stub
+		String SQL="delete from Survey where sid = ?";
+		jdbcTemplateObject.update(SQL, sid);
+	}
 
+	//Question
+	@Override
+	public void createQuestion(int sid,int qid,string qtype,string qtitle,string answer_a,string answer_b,string answer_c,string answer_d) {
+		// TODO Auto-generated method stub
+		String SQL = "insert into Question (sid, qid, qtype, qtitle, answer_a, answer_b, answer_c, answer_d) values (?,?,?,?,?,?,?,?)";     
+	    jdbcTemplateObject.update( SQL, sid, qid, qtype, qtitle, answer_a, answer_b, answer_c, answer_d);
+	}
+	
+	@Override
+	public List<Question> getQuestionbySid(int sid) {
+		// TODO Auto-generated method stub
+		String SQL="select * from Question where sid = ?";    
+		List<Question> questionList;
+		try {
+			questionList=jdbcTemplateObject.query(SQL,new Object[] {sid},new QuestionMapper());
+		} catch (EmptyResultDataAccessException e) {
+			e.printStackTrace();
+			questionList=null;
+			// TODO: handle exception
+		}	
+	    return questionList;
+	}
+	@Override
+	public Question getQuestionbyId(int sid,int qid) {
+		// TODO Auto-generated method stub
+		String SQL="select * from Question where sid = ? and qid = ?";    
+		Question question;
+		try {
+			question=jdbcTemplateObject.queryForObject(SQL,new Object[] {sid,qid},new QuestionMapper());
+		} catch (EmptyResultDataAccessException e) {
+			e.printStackTrace();
+			question=null;
+			// TODO: handle exception
+		}
+	    return question;
+	}
+	@Override
+	public void deleteQuestionbyId(int sid,int qid) {
+		// TODO Auto-generated method stub
+		String SQL="delete from Question where sid = ? and qid = ?";
+		jdbcTemplateObject.update(SQL, sid, qid);
+	}
+	
+	@Override
+	public void deleteQuestionbyId(int sid,int qid) {
+		// TODO Auto-generated method stub
+		String SQL="delete from Question where sid = ? and qid = ?";
+		jdbcTemplateObject.update(SQL, sid, qid);
+	}
+	
+	//AnswerStatistics
+	@Override
+	public void createAnswerStatistics(int sid,int qid) {
+		// TODO Auto-generated method stub
+		String SQL = "insert into AnswerStatistics (sid, qid, count_a, count_b, count_c, count_d) values (?,?,?,?,?,?)";     
+	    jdbcTemplateObject.update( SQL, sid, 0, 0, 0, 0);
+	}
+	@Override
+	public list<AnswerStatistics> getStatisticsbySid(int sid) {
+		// TODO Auto-generated method stub
+		String SQL = "select * from AnswerStatistics where sid = ?";        
+		List<AnswerStatistics> statistics;
+		try {
+			statistics=jdbcTemplateObject.query(SQL,new Object[] {sid},new AnswerStatisticsMapper());
+		} catch (EmptyResultDataAccessException e) {
+			e.printStackTrace();
+			statistics=null;
+			// TODO: handle exception
+		}	
+	    return statistics;
+	}
+	@Override
+	publicAnswerStatistics getAnswerStatisticsbyID(int sid,int qid) {
+		// TODO Auto-generated method stub
+		String SQL="select * from AnswerStatistics where sid = ? and qid = ?";    
+		AnswerStatistics statistics;
+		try {
+			statistics=jdbcTemplateObject.queryForObject(SQL,new Object[] {sid,qid},new AnswerStatisticsMapper());
+		} catch (EmptyResultDataAccessException e) {
+			e.printStackTrace();
+			statistics=null;
+			// TODO: handle exception
+		}
+	    return statistics;
+	}
+	@Override
+	public void updateAnswerStatistics(int sid,int qid,int count_a,int count_b,int count_c,int count_d){
+		// TODO Auto-generated method stub
+		String SQL = "update AnswerStatistics set count_a = ?, count_b = ?, count_c = ?, count_d = ?"
+			+ "where sid = ? and qid = ?";
+	    jdbcTemplateObject.update(SQL, count_a, count_b, count_c, count_d, sid, qid);
+	}
+	@Override
+	public void deleteAnswerStatisticsbyId(int sid,int qid) {
+		// TODO Auto-generated method stub
+		String SQL="delete from AnswerStatistics where sid = ? and qid = ?";
+		jdbcTemplateObject.update(SQL, sid, qid);
+	}
 }
